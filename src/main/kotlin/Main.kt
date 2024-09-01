@@ -11,7 +11,8 @@ class Main {
         fun main(args: Array<String>) {
             val frame = JFrame("Galactic Adventure")
             val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(4)
-            val gamePanel = UiManager(GameController(PlayerShip(), EnemyShip(), Scheduler(executorService)))
+            val scheduler = Scheduler(executorService)
+            val gamePanel = UiManager(GameController(PlayerShip(), EnemyShip(), scheduler), scheduler)
             frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
             frame.contentPane = gamePanel
             frame.pack()

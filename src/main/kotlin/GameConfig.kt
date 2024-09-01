@@ -5,7 +5,10 @@ object GameConfig {
     const val PLAYER_SHIP_SHOOTING_INTERVAL = 200
     const val PLAYER_SHIP_PROJECTILE_MOVEMENT_INTERVAL = 100
     const val PLAYER_SHIP_WIDTH = 50
-    const val PLAYER_SHIP_HEIGHT = 20
+    const val PLAYER_SHIP_HEIGHT = 50
     const val PLAYER_SHIP_BULLET_WIDTH = 6
     const val PLAYER_SHIP_BULLET_HEIGHT = 2
+    const val PLAYER_SHIP_SPEED = 4
+    const val FPS = 60
+    const val GAME_REDRAW_INTERVAL = 1000000 / FPS
 }

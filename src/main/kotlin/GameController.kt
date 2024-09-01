@@ -3,6 +3,8 @@ import model.ship.EnemyShip
 import model.ship.MovementDirection
 import model.ship.PlayerShip
 import scheduler.Scheduler
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 
 class GameController(
     private val playerShip: PlayerShip,
@@ -11,10 +13,22 @@ class GameController(
 ) {
 
     private val playerShipProjectiles: MutableSet<Projectile> = HashSet()
+    private lateinit var playerShipImage: BufferedImage
+    private lateinit var enemyShipImage: BufferedImage
 
     init {
         schedulePlayerShipShooting()
         schedulePlayerShipProjectileMovement()
+        loadShipImages()
+    }
+
+    private fun loadShipImages() {
+        try {
+            playerShipImage = ImageIO.read(javaClass.getResourceAsStream("player_ship.png"))
+            enemyShipImage = ImageIO.read(javaClass.getResourceAsStream("player_ship.png"))
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun schedulePlayerShipShooting() {
@@ -33,10 +47,6 @@ class GameController(
         )
     }
 
-    fun getPlayerShip() = playerShip
-
-    fun getPlayerShipProjectiles() = playerShipProjectiles
-
     private fun shootPlayerShipProjectile() {
         playerShipProjectiles.add(playerShip.shootProjectile())
     }
@@ -44,6 +54,10 @@ class GameController(
     private fun movePlayerShipProjectile() {
         this.playerShipProjectiles.forEach { it.move() }
     }
+
+    fun getPlayerShip() = playerShip
+
+    fun getPlayerShipProjectiles() = playerShipProjectiles
 
     fun movePlayerShip(direction: MovementDirection) {
         when (direction) {
@@ -56,4 +70,6 @@ class GameController(
             MovementDirection.LEFT -> playerShip.moveLeft()
         }
     }
+
+    fun getPlayerShipImage() = playerShipImage
 }

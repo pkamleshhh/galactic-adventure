@@ -6,26 +6,25 @@ import model.Projectile
 class PlayerShip : Ship {
     private var x = 50
     private var y = 50
-    private val step = 10
 
     override fun getPositionX(): Int = this.x
 
     override fun getPositionY(): Int = this.y
 
     override fun moveUp() {
-        y -= step
+        y -= GameConfig.PLAYER_SHIP_SPEED
     }
 
     override fun moveDown() {
-        y += step
+        y += GameConfig.PLAYER_SHIP_SPEED
     }
 
     override fun moveRight() {
-        x += step
+        x += GameConfig.PLAYER_SHIP_SPEED
     }
 
     override fun moveLeft() {
-        x -= step
+        x -= GameConfig.PLAYER_SHIP_SPEED
     }
 
     override fun shootProjectile(): Projectile {
