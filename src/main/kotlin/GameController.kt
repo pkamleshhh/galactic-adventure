@@ -1,4 +1,4 @@
-import model.Projectile
+import model.projectile.Projectile
 import model.ship.EnemyShip
 import model.ship.MovementDirection
 import model.ship.PlayerShip
@@ -12,27 +12,35 @@ class GameController(
     private val scheduler: Scheduler
 ) {
 
-    private val playerShipProjectiles: MutableSet<Projectile> = HashSet()
+    private val bullets: MutableSet<Projectile> = HashSet()
+    private val rocks: MutableSet<Projectile> = HashSet()
     private lateinit var playerShipImage: BufferedImage
     private lateinit var enemyShipImage: BufferedImage
 
     init {
         schedulePlayerShipShooting()
         schedulePlayerShipProjectileMovement()
+        scheduleEnemyShipShooting()
+        scheduleEnemyShipProjectileMovement()
+        scheduleEnemyShipMovement()
         loadShipImages()
+    }
+
+    private fun scheduleEnemyShipMovement() {
+        scheduler.schedule(this::moveEnemyShipRandomly, 15, GameConfig.ENEMY_SHIP_MOVEMENT_INTERVAL)
     }
 
     private fun loadShipImages() {
         try {
             playerShipImage = ImageIO.read(javaClass.getResourceAsStream("player_ship.png"))
-            enemyShipImage = ImageIO.read(javaClass.getResourceAsStream("player_ship.png"))
+            enemyShipImage = ImageIO.read(javaClass.getResourceAsStream("enemy_ship.png"))
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     private fun schedulePlayerShipShooting() {
-        scheduler.schedulePlayerShipShooting(
+        scheduler.schedule(
             this::shootPlayerShipProjectile,
             0,
             GameConfig.PLAYER_SHIP_SHOOTING_INTERVAL
@@ -40,24 +48,73 @@ class GameController(
     }
 
     private fun schedulePlayerShipProjectileMovement() {
-        scheduler.scheduleUiRendering(
+        scheduler.schedule(
             this::movePlayerShipProjectile,
             15,
             GameConfig.PLAYER_SHIP_PROJECTILE_MOVEMENT_INTERVAL
         )
     }
 
+    private fun scheduleEnemyShipShooting() {
+        scheduler.schedule(
+            this::shootEnemyShipProjectile,
+            0,
+            GameConfig.ENEMY_SHIP_SHOOTING_INTERVAL
+        )
+    }
+
+    private fun scheduleEnemyShipProjectileMovement() {
+        scheduler.schedule(
+            this::moveEnemyShipProjectile,
+            15,
+            GameConfig.ENEMY_SHIP_PROJECTILE_MOVEMENT_INTERVAL
+        )
+    }
+
     private fun shootPlayerShipProjectile() {
-        playerShipProjectiles.add(playerShip.shootProjectile())
+        bullets.add(playerShip.shootProjectile())
     }
 
     private fun movePlayerShipProjectile() {
-        this.playerShipProjectiles.forEach { it.move() }
+        bullets.forEach { it.move() }
+    }
+
+    private fun shootEnemyShipProjectile() {
+        rocks.add(enemyShip.shootProjectile())
+    }
+
+    private fun moveEnemyShipProjectile() {
+        rocks.forEach { it.move() }
+    }
+
+    private fun moveEnemyShipRandomly() {
+        if (enemyShip.getPositionY() == 40) {
+            enemyShip.moveDown()
+            return
+        }
+        if (enemyShip.getPositionY() == GameConfig.FRAME_HEIGHT) {
+            enemyShip.moveUp()
+            return
+        }
+        val direction = (Math.random() * 2).toInt()
+        if (direction == 0) {
+            enemyShip.moveUp()
+        } else {
+            enemyShip.moveDown()
+        }
     }
 
     fun getPlayerShip() = playerShip
 
-    fun getPlayerShipProjectiles() = playerShipProjectiles
+    fun getPlayerShipProjectiles() = bullets
+
+    fun getEnemyShip() = enemyShip
+
+    fun getEnemyShipProjectiles() = rocks
+
+    fun getPlayerShipImage() = playerShipImage
+
+    fun getEnemyShipImage() = enemyShipImage
 
     fun movePlayerShip(direction: MovementDirection) {
         when (direction) {
@@ -71,5 +128,5 @@ class GameController(
         }
     }
 
-    fun getPlayerShipImage() = playerShipImage
+
 }

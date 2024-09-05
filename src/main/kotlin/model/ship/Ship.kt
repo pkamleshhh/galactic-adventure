@@ -1,6 +1,6 @@
 package model.ship
 
-import model.Projectile
+import model.projectile.Projectile
 
 interface Ship {
     fun getPositionX():Int

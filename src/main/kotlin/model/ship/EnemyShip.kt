@@ -1,31 +1,33 @@
 package model.ship
 
-import model.Projectile
+import GameConfig
+import model.projectile.Rock
 
 class EnemyShip : Ship {
-    var x = 0
-    var y = 0
+    private var x = GameConfig.FRAME_WIDTH - 100
+    private var y = 50
+
     override fun getPositionX(): Int = this.x
 
     override fun getPositionY(): Int = this.y
 
     override fun moveUp() {
-        this.y--
+        y -= GameConfig.ENEMY_SHIP_SPEED
     }
 
     override fun moveDown() {
-        this.y++
+        y += GameConfig.ENEMY_SHIP_SPEED
     }
 
     override fun moveRight() {
-        this.x++
+        x += GameConfig.ENEMY_SHIP_SPEED
     }
 
     override fun moveLeft() {
-        this.x--
+        x -= GameConfig.ENEMY_SHIP_SPEED
     }
 
-    override fun shootProjectile(): Projectile {
-        TODO("Not yet implemented")
+    override fun shootProjectile(): Rock {
+        return Rock(this.x , this.y + GameConfig.ENEMY_SHIP_HEIGHT / 2)
     }
 }

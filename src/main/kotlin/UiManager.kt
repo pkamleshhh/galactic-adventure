@@ -16,20 +16,27 @@ class UiManager(private val gameController: GameController, private val schedule
         background = Color.WHITE
         isFocusable = true
         addKeyListener(this)
-        scheduler.scheduleUiRendering(this::repaint, 0, GameConfig.FRAME_UPDATE_INTERVAL)
+        scheduler.schedule(this::repaint, 0, GameConfig.FRAME_UPDATE_INTERVAL)
     }
 
     override fun paintComponent(g: Graphics) {
         super.paintComponent(g)
         drawPlayerShip(g as Graphics2D)
-        drawProjectiles(g)
+        drawPlayerShipProjectiles(g)
+        drawEnemyShip(g)
+        drawEnemyShipProjectiles(g)
         g.dispose()
     }
 
-    private fun drawProjectiles(g: Graphics2D) {
+    private fun drawPlayerShipProjectiles(g: Graphics2D) {
         this.gameController.getPlayerShipProjectiles().forEach {
             g.color = Color.BLACK
-            g.fillRect(it.getX(), it.getY(), GameConfig.PLAYER_SHIP_BULLET_WIDTH, GameConfig.PLAYER_SHIP_BULLET_HEIGHT)
+            g.fillRect(
+                it.getPositionX(),
+                it.getPositionY(),
+                GameConfig.PLAYER_SHIP_BULLET_WIDTH,
+                GameConfig.PLAYER_SHIP_BULLET_HEIGHT
+            )
         }
     }
 
@@ -41,6 +48,27 @@ class UiManager(private val gameController: GameController, private val schedule
             gameController.getPlayerShip().getPositionY(),
             GameConfig.PLAYER_SHIP_WIDTH,
             GameConfig.PLAYER_SHIP_HEIGHT, null
+        )
+    }
+
+    private fun drawEnemyShipProjectiles(g: Graphics2D) {
+        this.gameController.getEnemyShipProjectiles().forEach {
+            g.color = Color.BLACK
+            g.drawString(
+                "X",it.getPositionX(),
+                it.getPositionY()
+            )
+        }
+    }
+
+    private fun drawEnemyShip(g: Graphics2D) {
+        g.color = Color.GREEN
+        g.drawImage(
+            gameController.getEnemyShipImage(),
+            gameController.getEnemyShip().getPositionX(),
+            gameController.getEnemyShip().getPositionY(),
+            GameConfig.ENEMY_SHIP_WIDTH,
+            GameConfig.ENEMY_SHIP_HEIGHT, null
         )
     }
 

@@ -1,7 +1,7 @@
 package model.ship
 
 import GameConfig
-import model.Projectile
+import model.projectile.Bullet
 
 class PlayerShip : Ship {
     private var x = 50
@@ -27,7 +27,7 @@ class PlayerShip : Ship {
         x -= GameConfig.PLAYER_SHIP_SPEED
     }
 
-    override fun shootProjectile(): Projectile {
-        return Projectile(this.x + GameConfig.PLAYER_SHIP_WIDTH, this.y + GameConfig.PLAYER_SHIP_HEIGHT/2)
+    override fun shootProjectile(): Bullet {
+        return Bullet(this.x + GameConfig.PLAYER_SHIP_WIDTH, this.y + GameConfig.PLAYER_SHIP_HEIGHT / 2)
     }
 }
